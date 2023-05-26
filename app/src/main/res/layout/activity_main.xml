@@ -38,36 +38,30 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:src="@drawable/settings" />
+
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/xmlContainer"
         android:layout_width="match_parent"
-        android:layout_height="576dp"
-        android:layout_above="@id/previousButton"
-        android:layout_below="@id/header">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/xmlContentTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="XML Content" />
+
     </FrameLayout>
+
+    <!-- Добавленный невидимый LinearLayout -->
 
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="end">
-
-        <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/add"
-            android:backgroundTint="@color/black"
-            android:layout_margin="5dp"/>
+        android:layout_height="74dp"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/previousButton"
@@ -87,6 +81,21 @@
             android:backgroundTint="@color/black"
             app:srcCompat="@drawable/right" />
 
+        <ImageButton
+            android:id="@+id/addButton"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:backgroundTint="@color/black"
+            app:srcCompat="@drawable/add" />
+
     </LinearLayout>
+
+    <!-- Добавленный ListView -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>
