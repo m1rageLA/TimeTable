@@ -1,4 +1,5 @@
 package com.example.tt;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton nextButton;
     private ListView listView;
     private ArrayAdapter<String> adapter;
-    private List<String> lessonsList;
+
+    private List<String> lessonsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,50 +82,14 @@ public class MainActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddLessonDialog();
+                showAddLessonDialog(xmlFiles[currentIndex]);
             }
         });
     }
 
-    private void displayXmlFile(String fileName) {
-        // Здесь ваш код для отображения содержимого XML-файла
-        xmlContentTextView.setText("XML Content: " + fileName);
-    }
 
-    private void showAddLessonDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_edit_lesson, null);
-        dialogBuilder.setView(dialogView);
 
-        final EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        final EditText editTextTeacher = dialogView.findViewById(R.id.editTextTeacher);
-        final EditText editTextTime = dialogView.findViewById(R.id.editTextTime);
-        final EditText editTextClassroom = dialogView.findViewById(R.id.editTextClassroom);
-
-        dialogBuilder.setTitle("Add Lesson");
-        dialogBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String name = editTextName.getText().toString().trim();
-                String teacher = editTextTeacher.getText().toString().trim();
-                String time = editTextTime.getText().toString().trim();
-                String classroom = editTextClassroom.getText().toString().trim();
-
-                if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(teacher) &&
-                        !TextUtils.isEmpty(time) && !TextUtils.isEmpty(classroom)) {
-                    String lesson = name + " | " + teacher + " | " + time + " | " + classroom;
-                    lessonsList.add(lesson);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", null);
-
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-    }
-
-    private void showEditLessonDialog(final int position) {
+    private void showEditLessonDialog(int position) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_edit_lesson, null);
@@ -168,4 +135,62 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
     }
+
+
+    private void displayXmlFile(String fileName) {
+        int xmlResourceId = getResources().getIdentifier(fileName, "layout", getPackageName());
+        View view = getLayoutInflater().inflate(xmlResourceId, xmlContainer, false);
+        xmlContainer.removeAllViews();
+        xmlContainer.addView(view);
+        xmlContentTextView.setText("XML Content: " + fileName);
+        listView = view.findViewById(R.id.listView);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lessonsList);
+        listView.setAdapter(adapter);
+    }
+
+
+    private void showAddLessonDialog(final String selectedXmlFile) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        int xmlResourceId = getResources().getIdentifier("dialog_add_lesson", "layout", getPackageName());
+        View dialogView = inflater.inflate(xmlResourceId, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText editTextName = dialogView.findViewById(R.id.editTextName);
+        final EditText editTextTeacher = dialogView.findViewById(R.id.editTextTeacher);
+        final EditText editTextTime = dialogView.findViewById(R.id.editTextTime);
+        final EditText editTextClassroom = dialogView.findViewById(R.id.editTextClassroom);
+
+        dialogBuilder.setTitle("Add Lesson");
+        dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String name = editTextName.getText().toString().trim();
+                        String teacher = editTextTeacher.getText().toString().trim();
+                        String time = editTextTime.getText().toString().trim();
+                        String classroom = editTextClassroom.getText().toString().trim();
+
+                        if (!TextUtils.isEmpty(name)) {
+                            String lesson = "Name: " + name + "\nTeacher: " + teacher + "\nTime: " + time + "\nClassroom: " + classroom;
+
+                            // Добавить урок только в выбранный XML-файл
+                            if (selectedXmlFile.equals(xmlFiles[currentIndex])) {
+                                lessonsList.add(lesson);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Отмена добавления урока
+                    }
+                });
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+    
 }
