@@ -1,9 +1,11 @@
 package com.example.tt;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -32,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);//вызывает родительский onCreate
+        setContentView(R.layout.activity_main);//устанавливает макет activity_main.xml
 
+        //---инициализация элементов по ID---
         xmlContainer = findViewById(R.id.xmlContainer);
         xmlContentTextView = findViewById(R.id.xmlContentTextView);
         previousButton = findViewById(R.id.previousButton);
@@ -42,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
         initializeLessonsData();
 
-        displayXmlFile(xmlFiles[currentIndex]);
+        displayXmlFile(xmlFiles[currentIndex]);//отображает содержимое XML-файла в пользовательском интерфейсе
 
+        //---PREVIOUSBUTTON---декрементирование индекса
         previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 displayXmlFile(xmlFiles[currentIndex]);
             }
         });
-
+        //---NEXTBUTTNO---инкрементирование индекса
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,26 +66,27 @@ public class MainActivity extends AppCompatActivity {
                 if (currentIndex >= xmlFiles.length) {
                     currentIndex = 0;
                 }
-                displayXmlFile(xmlFiles[currentIndex]);
+                displayXmlFile(xmlFiles[currentIndex]);//отображение xml файла в зависимости от индекста
             }
         });
 
-
         ArrayAdapter<String> adapter = adapterMap.get(xmlFiles[currentIndex]);
 
-
-
-
-
         ImageButton addButton = findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {//устанавливает обработчик событий для addButton
             @Override
             public void onClick(View v) {
-                showAddLessonDialog(xmlFiles[currentIndex]);
+                //при нажатии на кнопку создаем экземпляр класса AddItem
+                //передает индекс дня в конструктор
+                AddItem addItem = new AddItem(MainActivity.this, lessonsMap.get(xmlFiles[currentIndex]), adapter);
+                addItem.showAddLessonDialog(xmlFiles[currentIndex]);
             }
         });
     }
 
+    /*связывает xml файлы с своим списком уроков
+    что-бы данные уроков могли быть отображены в соответствующем
+    пользовательском интерфейсе и изменены при необходимости*/
     private void initializeLessonsData() {
         for (String xmlFile : xmlFiles) {
             List<String> lessonsList = new ArrayList<>();
@@ -91,55 +96,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showEditLessonDialog(String xmlFile, int position) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_edit_lesson, null);
-        dialogBuilder.setView(dialogView);
-
-        final EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        final EditText editTextTeacher = dialogView.findViewById(R.id.editTextTeacher);
-        final EditText editTextTime = dialogView.findViewById(R.id.editTextTime);
-        final EditText editTextClassroom = dialogView.findViewById(R.id.editTextClassroom);
-
-        List<String> lessonsList = lessonsMap.get(xmlFile);
-        String lesson = lessonsList.get(position);
-        String[] parts = lesson.split(" \\| ");
-        if (parts.length == 4) {
-            editTextName.setText(parts[0]);
-            editTextTeacher.setText(parts[1]);
-            editTextTime.setText(parts[2]);
-            editTextClassroom.setText(parts[3]);
-        }
-
-        dialogBuilder.setTitle("Edit Lesson");
-        dialogBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String name = editTextName.getText().toString().trim();
-                String teacher = editTextTeacher.getText().toString().trim();
-                String time = editTextTime.getText().toString().trim();
-                String classroom = editTextClassroom.getText().toString().trim();
-
-                if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(teacher) &&
-                        !TextUtils.isEmpty(time) && !TextUtils.isEmpty(classroom)) {
-                    String editedLesson = name + " | " + teacher + " | " + time + " | " + classroom;
-                    lessonsList.set(position, editedLesson);
-                    ArrayAdapter<String> adapter = adapterMap.get(xmlFile);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-        dialogBuilder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                lessonsList.remove(position);
-                ArrayAdapter<String> adapter = adapterMap.get(xmlFile);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-    }
 
     private void displayXmlFile(String fileName) {
         int xmlResourceId = getResources().getIdentifier(fileName, "layout", getPackageName());
@@ -149,51 +105,18 @@ public class MainActivity extends AppCompatActivity {
         xmlContentTextView.setText("XML Content: " + fileName);
 
         ListView listView = view.findViewById(R.id.listView);
-        ArrayAdapter<String> adapter = adapterMap.get(fileName);
+
+        ArrayAdapter<String> adapter = adapterMap.get(fileName); // Перемещение объявления adapter сюда
+
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EditItem editItem = new EditItem(MainActivity.this, lessonsMap.get(xmlFiles[currentIndex]), adapter);
+                editItem.showEditLessonDialog(xmlFiles[currentIndex], position);
+            }
+        });
     }
 
-    private void showAddLessonDialog(final String selectedXmlFile) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-
-        int xmlResourceId = getResources().getIdentifier("dialog_add_lesson", "layout", getPackageName());
-        View dialogView = inflater.inflate(xmlResourceId, null);
-        dialogBuilder.setView(dialogView);
-
-        final EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        final EditText editTextTeacher = dialogView.findViewById(R.id.editTextTeacher);
-        final EditText editTextTime = dialogView.findViewById(R.id.editTextTime);
-        final EditText editTextClassroom = dialogView.findViewById(R.id.editTextClassroom);
-
-        dialogBuilder.setTitle("Add Lesson");
-        dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String name = editTextName.getText().toString().trim();
-                        String teacher = editTextTeacher.getText().toString().trim();
-                        String time = editTextTime.getText().toString().trim();
-                        String classroom = editTextClassroom.getText().toString().trim();
-
-                        if (!TextUtils.isEmpty(name)) {
-                            String lesson = "Name: " + name + "\nTeacher: " + teacher + "\nTime: " + time + "\nClassroom: " + classroom;
-
-                            // Добавить урок только в выбранный XML-файл
-                            List<String> lessonsList = lessonsMap.get(selectedXmlFile);
-                            ArrayAdapter<String> adapter = adapterMap.get(selectedXmlFile);
-                            if (lessonsList != null && adapter != null) {
-                                lessonsList.add(lesson);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Отмена добавления урока
-                    }
-                });
-
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
-    }
 }

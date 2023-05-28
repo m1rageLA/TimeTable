@@ -28,6 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="607dp"
         android:layout_weight="1"
-        style="@style/ListViewStyle" />
+        />
 
 </LinearLayout>
