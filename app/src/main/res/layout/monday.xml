@@ -2,13 +2,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/holo_blue_light">
+    >
 
     <!-- Добавьте здесь ваши элементы интерфейса -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Monday"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="607dp"
+        android:layout_weight="1"
+        style="@style/ListViewStyle" />
+
 </LinearLayout>
