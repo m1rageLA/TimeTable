@@ -14,7 +14,7 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.tt.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>

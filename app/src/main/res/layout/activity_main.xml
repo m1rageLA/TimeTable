@@ -10,18 +10,10 @@
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/mainColor"
+        android:layout_height="65dp"
+        android:background="@color/white"
         android:gravity="start"
         android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="14dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/menu" />
 
         <TextView
             android:id="@+id/textView2"
@@ -29,6 +21,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
+            android:layout_marginStart="20dp"
             android:text="Timetable"
             android:textSize="25sp" />
 
@@ -41,11 +34,84 @@
 
     </LinearLayout>
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/mondayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Monday"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/tusdayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Tuesday"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/wednesdayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Wednesday"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/thursdayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Thursday"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/fridayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Friday"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/saturdayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Saturday"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/sundayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Sunday"
+                android:textColor="#000000" />
+
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!-- Добавленный невидимый LinearLayout -->
+
     <FrameLayout
         android:id="@+id/xmlContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="528dp"
+        android:layout_weight="1"
+        android:background="#f2f2f2">
 
         <TextView
             android:id="@+id/xmlContentTextView"
@@ -54,8 +120,6 @@
             android:text="XML Content" />
 
     </FrameLayout>
-
-    <!-- Добавленный невидимый LinearLayout -->
 
     <LinearLayout
         android:id="@+id/footer"

@@ -1,20 +1,20 @@
 package com.example.tt;
 
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -31,23 +31,32 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton nextButton;
     private Map<String, List<String>> lessonsMap = new HashMap<>();
     private Map<String, ArrayAdapter<String>> adapterMap = new HashMap<>();
+    private static final String KEY_IMAGE_URI = "image_uri";
+    private Uri imageUri;
+    private FileManagerXML fileManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);//вызывает родительский onCreate
-        setContentView(R.layout.activity_main);//устанавливает макет activity_main.xml
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        //---инициализация элементов по ID---
         xmlContainer = findViewById(R.id.xmlContainer);
         xmlContentTextView = findViewById(R.id.xmlContentTextView);
         previousButton = findViewById(R.id.previousButton);
         nextButton = findViewById(R.id.nextButton);
 
-        initializeLessonsData();
+        fileManager = new FileManagerXML(this, xmlContainer, xmlContentTextView, lessonsMap, adapterMap);
+        fileManager.initializeLessonsData();
 
-        displayXmlFile(xmlFiles[currentIndex]);//отображает содержимое XML-файла в пользовательском интерфейсе
+        if (savedInstanceState != null) {
+            String imageUriString = savedInstanceState.getString(KEY_IMAGE_URI);
+            if (imageUriString != null) {
+                imageUri = Uri.parse(imageUriString);
+            }
+        }
 
-        //---PREVIOUSBUTTON---декрементирование индекса
+        displayXmlFile(xmlFiles[currentIndex]);
+
         previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 displayXmlFile(xmlFiles[currentIndex]);
             }
         });
-        //---NEXTBUTTNO---инкрементирование индекса
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,57 +75,59 @@ public class MainActivity extends AppCompatActivity {
                 if (currentIndex >= xmlFiles.length) {
                     currentIndex = 0;
                 }
-                displayXmlFile(xmlFiles[currentIndex]);//отображение xml файла в зависимости от индекста
+                displayXmlFile(xmlFiles[currentIndex]);
             }
         });
 
         ArrayAdapter<String> adapter = adapterMap.get(xmlFiles[currentIndex]);
 
         ImageButton addButton = findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {//устанавливает обработчик событий для addButton
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //при нажатии на кнопку создаем экземпляр класса AddItem
-                //передает индекс дня в конструктор
                 AddItem addItem = new AddItem(MainActivity.this, lessonsMap.get(xmlFiles[currentIndex]), adapter);
                 addItem.showAddLessonDialog(xmlFiles[currentIndex]);
             }
         });
     }
 
-    /*связывает xml файлы с своим списком уроков
-    что-бы данные уроков могли быть отображены в соответствующем
-    пользовательском интерфейсе и изменены при необходимости*/
-    private void initializeLessonsData() {
-        for (String xmlFile : xmlFiles) {
-            List<String> lessonsList = new ArrayList<>();
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lessonsList);
-            lessonsMap.put(xmlFile, lessonsList);
-            adapterMap.put(xmlFile, adapter);
+    private void displayXmlFile(String fileName) {
+        fileManager.displayXmlFile(fileName);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AddItem.PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            displayImage(imageUri);
         }
     }
 
+    public void displayImage(Uri imageUri) {
+        ImageView imageView = new ImageView(this);
+        imageView.setImageURI(imageUri);
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-    private void displayXmlFile(String fileName) {
-        int xmlResourceId = getResources().getIdentifier(fileName, "layout", getPackageName());
-        View view = getLayoutInflater().inflate(xmlResourceId, xmlContainer, false);
         xmlContainer.removeAllViews();
-        xmlContainer.addView(view);
-        xmlContentTextView.setText("XML Content: " + fileName);
-
-        ListView listView = view.findViewById(R.id.listView);
-
-        ArrayAdapter<String> adapter = adapterMap.get(fileName); // Перемещение объявления adapter сюда
-
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EditItem editItem = new EditItem(MainActivity.this, lessonsMap.get(xmlFiles[currentIndex]), adapter);
-                editItem.showEditLessonDialog(xmlFiles[currentIndex], position);
-            }
-        });
+        xmlContainer.addView(imageView);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (imageUri != null) {
+            outState.putString(KEY_IMAGE_URI, imageUri.toString());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String imageUriString = savedInstanceState.getString(KEY_IMAGE_URI);
+        if (imageUriString != null) {
+            imageUri = Uri.parse(imageUriString);
+            displayImage(imageUri);
+        }
+    }
 }

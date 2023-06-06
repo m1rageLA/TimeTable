@@ -3,37 +3,47 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editTextName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name"
-        android:inputType="text" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp">
 
-    <EditText
-        android:id="@+id/editTextTeacher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Teacher"
-        android:inputType="text" />
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/editTextTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Time"
-        android:inputType="text" />
+        <EditText
+            android:id="@+id/editTextClassroom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Classroom"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/editTextClassroom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Classroom"
-        android:inputType="text" />
+        <EditText
+            android:id="@+id/editTextTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Time"
+            android:inputType="text" />
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <EditText
+            android:id="@+id/editTextTeacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Teacher"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/galleryButton"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:text="Выбрать изображение из галереи"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+
 
 </LinearLayout>

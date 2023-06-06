@@ -1,5 +1,6 @@
 package com.example.tt;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +20,12 @@ public class EditItem {
 
     public EditItem(AppCompatActivity activity, List<String> lessonsList, ArrayAdapter<String> adapter) {
         this.activity = activity;
+        this.lessonsList = lessonsList;
+        this.adapter = adapter;
+    }
+
+    public EditItem(Context context, List<String> lessonsList, ArrayAdapter<String> adapter) {
+        this.activity = (AppCompatActivity) context;
         this.lessonsList = lessonsList;
         this.adapter = adapter;
     }

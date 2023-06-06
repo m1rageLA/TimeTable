@@ -2,15 +2,15 @@ package com.example.tt;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.text.TextUtils;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.tt.R;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class AddItem {
     private AppCompatActivity activity;
     private List<String> lessonsList;
     private ArrayAdapter<String> adapter;
+    private Uri imageUri;
 
     public AddItem(AppCompatActivity activity, List<String> lessonsList, ArrayAdapter<String> adapter) {
         this.activity = activity;
@@ -38,6 +39,14 @@ public class AddItem {
         final EditText editTextTime = dialogView.findViewById(R.id.editTextTime);
         final EditText editTextClassroom = dialogView.findViewById(R.id.editTextClassroom);
 
+        Button galleryButton = dialogView.findViewById(R.id.galleryButton);
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+
         dialogBuilder.setTitle("Add Lesson");
         dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -46,24 +55,36 @@ public class AddItem {
                         String time = editTextTime.getText().toString().trim();
                         String classroom = editTextClassroom.getText().toString().trim();
 
-                        if (!TextUtils.isEmpty(name)) {
-                            String lesson = "Name: " + name + "\nTeacher: " + teacher + "\nTime: " + time + "\nClassroom: " + classroom;
+                        if (!name.isEmpty()) {
+                            String lesson = "Name: " + name + "\nTeacher: " + teacher +
+                                    "\nTime: " + time + "\nClassroom: " + classroom;
 
-                            // Добавить урок только в выбранный XML-файл
                             if (lessonsList != null && adapter != null) {
                                 lessonsList.add(lesson);
                                 adapter.notifyDataSetChanged();
+                            }
+
+                            if (imageUri != null) {
+                                MainActivity activity = (MainActivity) AddItem.this.activity;
+                                activity.displayImage(imageUri);
                             }
                         }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        // Отмена добавления урока
+                        // Cancel adding lesson
                     }
                 });
 
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
     }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        activity.startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+    }
+
+    public static final int PICK_IMAGE_REQUEST = 1;
 }
