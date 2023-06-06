@@ -1,5 +1,4 @@
 package com.example.tt;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,29 +9,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FileManagerXML {
-    //контекст
     private Context context;
-
-    //Контейнер, в котором будет отображаться содержимое XML файла
     private FrameLayout xmlContainer;
-
-    //TextView для отображения информации о текущем отображаемом XML файле
     private TextView xmlContentTextView;
-
-    //Карта, которая связывает имена XML файлов с соответствующим списком уроков
     private Map<String, List<String>> lessonsMap;
-
-    /*Инициализирует карты lessonsMap и adapterMap с пустыми списками уроков
-    и ArrayAdapter для каждого XML файла. Данный метод вызывается в onCreate
-    методе MainActivity для заполнения начальных данных*/
     private Map<String, ArrayAdapter<String>> adapterMap;
     private String[] xmlFiles = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
-
 
     public FileManagerXML(Context context, FrameLayout xmlContainer, TextView xmlContentTextView, Map<String, List<String>> lessonsMap, Map<String, ArrayAdapter<String>> adapterMap) {
         this.context = context;

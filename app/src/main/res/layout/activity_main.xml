@@ -52,7 +52,7 @@
                 android:textColor="#000000" />
 
             <Button
-                android:id="@+id/tusdayButton"
+                android:id="@+id/tuesdayButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -125,25 +125,8 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="74dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/previousButton"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/black"
-            app:srcCompat="@drawable/left" />
-
-        <ImageButton
-            android:id="@+id/nextButton"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/black"
-            app:srcCompat="@drawable/right" />
+        android:orientation="horizontal"
+        android:gravity="end">
 
         <ImageButton
             android:id="@+id/addButton"

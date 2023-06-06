@@ -1,11 +1,11 @@
 package com.example.tt;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,8 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private int currentIndex = 0;
     private FrameLayout xmlContainer;
     private TextView xmlContentTextView;
-    private ImageButton previousButton;
-    private ImageButton nextButton;
     private Map<String, List<String>> lessonsMap = new HashMap<>();
     private Map<String, ArrayAdapter<String>> adapterMap = new HashMap<>();
     private static final String KEY_IMAGE_URI = "image_uri";
@@ -38,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         xmlContainer = findViewById(R.id.xmlContainer);
         xmlContentTextView = findViewById(R.id.xmlContentTextView);
-        previousButton = findViewById(R.id.previousButton);
-        nextButton = findViewById(R.id.nextButton);
 
         fileManager = new FileManagerXML(this, xmlContainer, xmlContentTextView, lessonsMap, adapterMap);
         fileManager.initializeLessonsData();
@@ -51,29 +47,31 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //кнопки
         displayXmlFile(xmlFiles[currentIndex]);
-        previousButton.setOnClickListener(new View.OnClickListener() {
+
+        Button mondayButton = findViewById(R.id.mondayButton);
+        mondayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OnClickManager.onClickPrevious(xmlFiles, currentIndex, fileManager);
+                currentIndex = 0;
+                displayXmlFile(xmlFiles[currentIndex]);
             }
         });
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        Button tuesdayButton = findViewById(R.id.tuesdayButton);
+        tuesdayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OnClickManager.onClickNext(xmlFiles, currentIndex, fileManager);
+                currentIndex = 1;
+                displayXmlFile(xmlFiles[currentIndex]);
             }
         });
-
-        ArrayAdapter<String> adapter = adapterMap.get(xmlFiles[currentIndex]);
 
         ImageButton addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddItem addItem = new AddItem(MainActivity.this, lessonsMap.get(xmlFiles[currentIndex]), adapter);
+                AddItem addItem = new AddItem(MainActivity.this, lessonsMap.get(xmlFiles[currentIndex]), adapterMap.get(xmlFiles[currentIndex]));
                 addItem.showAddLessonDialog(xmlFiles[currentIndex]);
             }
         });
@@ -81,6 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayXmlFile(String fileName) {
         fileManager.displayXmlFile(fileName);
+        ArrayAdapter<String> adapter = adapterMap.get(fileName);
+
+        ImageButton addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddItem addItem = new AddItem(MainActivity.this, lessonsMap.get(fileName), adapter);
+                addItem.showAddLessonDialog(fileName);
+            }
+        });
     }
 
     @Override
