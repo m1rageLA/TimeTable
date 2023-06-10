@@ -1,4 +1,5 @@
 package com.example.tt;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,10 @@ public class FileManagerXML {
         }
     }
 
+    public Map<String, ArrayAdapter<String>> getAdapterMap() {
+        return adapterMap;
+    }
+
     public void displayXmlFile(String fileName) {
         int xmlResourceId = context.getResources().getIdentifier(fileName, "layout", context.getPackageName());
         View view = LayoutInflater.from(context).inflate(xmlResourceId, null);
@@ -62,3 +67,4 @@ public class FileManagerXML {
 
 
 }
+

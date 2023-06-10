@@ -109,15 +109,17 @@
     <FrameLayout
         android:id="@+id/xmlContainer"
         android:layout_width="match_parent"
-        android:layout_height="528dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="#f2f2f2">
+        android:background="#f2f2f2"
+        >
 
         <TextView
             android:id="@+id/xmlContentTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="XML Content" />
+            android:text="XML Content"
+            android:layout_gravity="center_vertical"/>
 
     </FrameLayout>
 
@@ -135,6 +137,7 @@
             android:layout_margin="5dp"
             android:backgroundTint="@color/black"
             app:srcCompat="@drawable/add" />
+
 
     </LinearLayout>
 
