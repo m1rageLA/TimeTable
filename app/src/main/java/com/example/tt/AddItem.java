@@ -35,9 +35,8 @@ public class AddItem {
         dialogBuilder.setView(dialogView);
 
         final EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        final EditText editTextTeacher = dialogView.findViewById(R.id.editTextTeacher);
+        final EditText editTextInfo = dialogView.findViewById(R.id.editTextInfo);
         final EditText editTextTime = dialogView.findViewById(R.id.editTextTime);
-        final EditText editTextClassroom = dialogView.findViewById(R.id.editTextClassroom);
 
         Button galleryButton = dialogView.findViewById(R.id.galleryButton);
         galleryButton.setOnClickListener(new View.OnClickListener() {
@@ -51,14 +50,11 @@ public class AddItem {
         dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String name = editTextName.getText().toString().trim();
-                String teacher = editTextTeacher.getText().toString().trim();
+                String info = editTextInfo.getText().toString().trim();
                 String time = editTextTime.getText().toString().trim();
-                String classroom = editTextClassroom.getText().toString().trim();
 
                 if (!name.isEmpty()) {
-                    String lesson = "Name: " + name + "\nTeacher: " + teacher +
-                            "\nTime: " + time + "\nClassroom: " + classroom;
-
+                    String lesson = String.format("%-12s%s\n%s", time, name, info);
                     if (lessonsList != null && adapter != null) {
                         lessonsList.add(lesson);
                         adapter.notifyDataSetChanged();
@@ -82,6 +78,5 @@ public class AddItem {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         activity.startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
-
     public static final int PICK_IMAGE_REQUEST = 1;
 }

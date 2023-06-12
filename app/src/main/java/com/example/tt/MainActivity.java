@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private FileManagerXML fileManager;
     private Map<String, Uri> imageUriMap = new HashMap<>();
     private ImageManager imageManager;
+    private Button[] dayButtons;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,68 +60,27 @@ public class MainActivity extends AppCompatActivity {
 
         imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, this);
 
-        Button mondayButton = findViewById(R.id.mondayButton);
-        mondayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = 0;
-                imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
-            }
-        });
 
-        Button tuesdayButton = findViewById(R.id.tuesdayButton);
-        tuesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = 1;
-                imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
-            }
-        });
+        dayButtons = new Button[xmlFiles.length];
+        dayButtons[0] = findViewById(R.id.mondayButton);
+        dayButtons[1] = findViewById(R.id.tuesdayButton);
+        dayButtons[2] = findViewById(R.id.wednesdayButton);
+        dayButtons[3] = findViewById(R.id.thursdayButton);
+        dayButtons[4] = findViewById(R.id.fridayButton);
+        dayButtons[5] = findViewById(R.id.saturdayButton);
+        dayButtons[6] = findViewById(R.id.sundayButton);
 
-        Button wednesdayButton = findViewById(R.id.wednesdayButton);
-        wednesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = 2;
-                imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
-            }
-        });
-
-        Button thursdayButton = findViewById(R.id.thursdayButton);
-        thursdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = 3;
-                imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
-            }
-        });
-
-        Button fridayButton = findViewById(R.id.fridayButton);
-        fridayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = 4;
-                imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
-            }
-        });
-
-        Button saturdayButton = findViewById(R.id.saturdayButton);
-        saturdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = 5;
-                imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
-            }
-        });
-
-        Button sundayButton = findViewById(R.id.sundayButton);
-        sundayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentIndex = 6;
-                imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
-            }
-        });
+        for (int i = 0; i < dayButtons.length; i++) {
+            final int index = i;
+            dayButtons[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentIndex = index;
+                    imageManager.displayXmlFile(xmlFiles[currentIndex], fileManager, imageUriMap, MainActivity.this);
+                    updateButtonColors();
+                }
+            });
+        }
 
         ImageButton addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -129,11 +90,24 @@ public class MainActivity extends AppCompatActivity {
                 addItem.showAddLessonDialog(xmlFiles[currentIndex]);
             }
         });
+
+        updateButtonColors();
     }
+
+    private void updateButtonColors() {
+        for (int i = 0; i < dayButtons.length; i++) {
+            if (i == currentIndex) {
+                dayButtons[i].setTextColor(getResources().getColor(R.color.active_day_color));
+            } else {
+                dayButtons[i].setTextColor(getResources().getColor(R.color.inactive_day_color));
+            }
+        }
+    }
+
     public void displayImage(Uri imageUri) {
         ImageView imageView = new ImageView(this);
         imageView.setImageURI(imageUri);
-        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)); // Обновленные параметры макета
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         xmlContainer.removeAllViews();
         xmlContainer.addView(imageView);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -164,4 +139,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         imageManager.onRestoreInstanceState(savedInstanceState, imageUriMap, xmlFiles, KEY_IMAGE_URI);
     }
+
+
 }

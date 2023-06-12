@@ -128,7 +128,8 @@
         android:layout_width="match_parent"
         android:layout_height="74dp"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:background="#f4f4f4">
 
         <ImageButton
             android:id="@+id/addButton"

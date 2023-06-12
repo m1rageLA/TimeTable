@@ -1,0 +1,5 @@
+<!-- list_item_background.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_activated="true" android:drawable="@color/active_day_color" /> <!-- Выбранный элемент -->
+    <item android:drawable="@color/inactive_day_color" /> <!-- Остальные элементы -->
+</selector>

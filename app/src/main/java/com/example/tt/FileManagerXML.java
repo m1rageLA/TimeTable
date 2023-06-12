@@ -9,7 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +35,7 @@ public class FileManagerXML {
     public void initializeLessonsData() {
         for (String xmlFile : xmlFiles) {
             List<String> lessonsList = new ArrayList<>();
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, lessonsList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.list_item, lessonsList);
             lessonsMap.put(xmlFile, lessonsList);
             adapterMap.put(xmlFile, adapter);
         }
@@ -62,9 +65,12 @@ public class FileManagerXML {
                 editItem.showEditLessonDialog(fileName, position);
             }
         });
+
+        // Изменение цвета элементов списка на красный
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            View item = listView.getChildAt(i);
+            TextView textView = item.findViewById(android.R.id.text1);
+            textView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light));
+        }
     }
-
-
-
 }
-

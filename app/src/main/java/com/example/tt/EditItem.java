@@ -37,30 +37,26 @@ public class EditItem {
         dialogBuilder.setView(dialogView);
 
         final EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        final EditText editTextTeacher = dialogView.findViewById(R.id.editTextTeacher);
         final EditText editTextTime = dialogView.findViewById(R.id.editTextTime);
-        final EditText editTextClassroom = dialogView.findViewById(R.id.editTextClassroom);
+        final EditText editTextInfo = dialogView.findViewById(R.id.editTextInfo);
 
         String lesson = lessonsList.get(position);
         String[] parts = lesson.split(" \\| ");
         if (parts.length == 4) {
             editTextName.setText(parts[0]);
-            editTextTeacher.setText(parts[1]);
             editTextTime.setText(parts[2]);
-            editTextClassroom.setText(parts[3]);
+            editTextInfo.setText(parts[3]);
         }
 
         dialogBuilder.setTitle("Edit Lesson");
         dialogBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String name = editTextName.getText().toString().trim();
-                String teacher = editTextTeacher.getText().toString().trim();
                 String time = editTextTime.getText().toString().trim();
-                String classroom = editTextClassroom.getText().toString().trim();
+                String info = editTextInfo.getText().toString().trim();
 
-                if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(teacher) &&
-                        !TextUtils.isEmpty(time) && !TextUtils.isEmpty(classroom)) {
-                    String editedLesson = "Name: " + name + "\nTeacher: " + teacher + "\nTime: " + time + "\nClassroom: " + classroom;
+                if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(time) && !TextUtils.isEmpty(info)) {
+                    String editedLesson = String.format("%-12s%s\n%s", time, name, info);
                     lessonsList.set(position, editedLesson);
                     adapter.notifyDataSetChanged();
                 }

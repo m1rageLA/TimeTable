@@ -3,11 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mainColor">#c5dce8</color>
-    <color name="c1">#ad9245</color>
-    <color name="c2">#a31a93</color>
-    <color name="c3">#00ff99</color>
+    <color name="inactive_day_color">#a3a3a3</color>
+    <color name="color2">#a31a93</color>
+    <color name="color3">#00ff99</color>
     <color name="red">#f00c2e</color>
-    <color name="c5">#e8f00c</color>
-    <color name="c6">#e8f00c</color>
-
+    <color name="c5">#07A1B5</color>
+    <color name="active_day_color">#141414</color>
 </resources>
